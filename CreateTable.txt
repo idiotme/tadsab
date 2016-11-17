@@ -98,7 +98,7 @@ idlowongan INT not null REFERENCES LOWONGAN(idlowongan)
 "comment" ON DELETE RESTRICT ON UPDATE CASCADE,
 id_st_lamaran INT not null REFERENCES STATUS_LAMARAN(id)
 "comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-ipk numeric(5,2) not null,
+ipk numeric(3,2) not null,
 jumlahsks INT not null,
 nip varchar(20) REFERENCES DOSEN(nip)
 "comment" ON DELETE RESTRICT ON UPDATE CASCADE
