@@ -6,7 +6,7 @@ CREATE TABLE MATA_KULIAH (
 kode char(10) PRIMARY KEY,
 nama varchar(100) not null,
 prasyarat_dari char(10) REFERENCES MATA_KULIAH(kode)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE
+ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE TERM (
@@ -16,13 +16,13 @@ PRIMARY KEY (tahun, semester)
 );
 
 CREATE TABLE KELAS_MK (
-idkelasmk INT PRIMARY KEY,
-tahun INT not null REFERENCES TERM(tahun)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-semester INT not null REFERENCES TERM(semester)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+idkelasmk SERIAL PRIMARY KEY,
+tahun INT not null,
+semester INT not null,
+FOREIGN KEY(tahun, semester) REFERENCES TERM(tahun, semester)
+ON DELETE RESTRICT ON UPDATE CASCADE,
 kode_mk char(10) not null REFERENCES MATA_KULIAH(kode)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE
+ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE DOSEN (
@@ -50,58 +50,57 @@ url_foto varchar(100)
 );
 
 CREATE TABLE TELEPON_MAHASISWA (
-npm char(10) PRIMARY KEY,
-nomortelepon varchar(20) not null
+npm char(10) REFERENCES MAHASISWA(npm),
+nomortelepon varchar(20) not null,
+PRIMARY KEY (npm, nomortelepon)
 );
 
 CREATE TABLE MHS_MENGAMBIL_KELAS_MK (
 npm char(10) REFERENCES MAHASISWA(npm)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-idkelasmk int REFERENCES KELAS_MK(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+ON DELETE RESTRICT ON UPDATE CASCADE,
+idkelasmk INT REFERENCES KELAS_MK(idkelasmk)
+ON DELETE RESTRICT ON UPDATE CASCADE,
 PRIMARY KEY (npm, idkelasmk),
 nilai numeric(5,2)
 );
 
 CREATE TABLE DOSEN_KELAS_MK (
 nip varchar(20) REFERENCES DOSEN(nip)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-idkelasmk INT REFERENCES KELAS_MK(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE
+ON DELETE RESTRICT ON UPDATE CASCADE,
+idkelasmk INT REFERENCES KELAS_MK(idkelasmk)
+ON DELETE RESTRICT ON UPDATE CASCADE,
+PRIMARY KEY (nip, idkelasmk)
 );
 
 CREATE TABLE LOWONGAN (
-idlowongan INT not null REFERENCES KELAS_MK(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-idkelasmk int not null REFERENCES KELAS_MK(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-kodemk char(10) not null REFERENCES KELAS_MK(kodemk)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+idlowongan SERIAL PRIMARY KEY,
+idkelasmk int not null REFERENCES KELAS_MK(idkelasmk)
+ON DELETE RESTRICT ON UPDATE CASCADE,
 status boolean not null DEFAULT FALSE,
 jumlah_asisten INT not null DEFAULT 0,
 syarat_tambahan varchar(100),
 nipdosenpembuka varchar(20) not null REFERENCES DOSEN(nip)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE
+ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE STATUS_LAMARAN (
 id INT PRIMARY KEY,
-status varchar(10) not null
+status varchar(20) not null
 );
 
 CREATE TABLE LAMARAN (
-idlamaran INT,
+idlamaran SERIAL,
 npm char(10) REFERENCES MAHASISWA(npm)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+ON DELETE RESTRICT ON UPDATE CASCADE,
 PRIMARY KEY (idlamaran, npm),
 idlowongan INT not null REFERENCES LOWONGAN(idlowongan)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+ON DELETE RESTRICT ON UPDATE CASCADE,
 id_st_lamaran INT not null REFERENCES STATUS_LAMARAN(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+ON DELETE RESTRICT ON UPDATE CASCADE,
 ipk numeric(3,2) not null,
 jumlahsks INT not null,
 nip varchar(20) REFERENCES DOSEN(nip)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE
+ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 CREATE TABLE STATUS_LOG (
@@ -115,33 +114,17 @@ kategori varchar(50) not null
 );
 
 CREATE TABLE LOG (
-idlog INT PRIMARY KEY,
-idlamaran INT not null REFERENCES LAMARAN(idlamaran)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-npm char(10) not null REFERENCES LAMARAN(npm)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
-id_kat_log INT not null REFERENCES KATAGORI_LOG(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+idlog SERIAL PRIMARY KEY,
+idlamaran INT not null,
+npm char(10) not null,
+FOREIGN KEY(idlamaran, npm) REFERENCES LAMARAN(idlamaran, npm)
+ON DELETE RESTRICT ON UPDATE CASCADE,
+id_kat_log INT not null REFERENCES KATEGORI_LOG(id)
+ON DELETE RESTRICT ON UPDATE CASCADE,
 id_st_log INT not null REFERENCES STATUS_LOG(id)
-"comment" ON DELETE RESTRICT ON UPDATE CASCADE,
+ON DELETE RESTRICT ON UPDATE CASCADE,
 tanggal timestamp not null,
 jam_mulai timestamp not null,
 jam_selesai timestamp not null,
 deskripsi_kerja varchar(100) not null
 );
-
-\d
-\d MATA_KULIAH
-\d TERM
-\d KELAS_MK
-\d DOSEN
-\d MAHASISWA
-\d TELEPON_MAHASISWA
-\d MHS_MENGAMBIL_KELAS_MK
-\d DOSEN_KELAS_MK
-\d LOWONGAN
-\d STATUS_LAMARAN
-\d LAMARAN
-\d STATUS_LOG
-\d KATEGORI_LOG
-\d LOG
