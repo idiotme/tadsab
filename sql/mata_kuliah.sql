@@ -1,5 +1,5 @@
 INSERT INTO MATA_KULIAH (kode, nama, prasyarat_dari) VALUES ('CSCE604121', 'Game Development', NULL);
-INSERT INTO MATA_KULIAH (kode, nama, prasyarat_dari) VALUES ('CSCM603127', 'Rekayasa Pereangkat Lunak', 'CSCE604121');
+INSERT INTO MATA_KULIAH (kode, nama, prasyarat_dari) VALUES ('CSCM603127', 'Rekayasa Perangkat Lunak', 'CSCE604121');
 INSERT INTO MATA_KULIAH (kode, nama, prasyarat_dari) VALUES ('CSCE604131', 'Jejaring Semantik', NULL);
 INSERT INTO MATA_KULIAH (kode, nama, prasyarat_dari) VALUES ('CSGE602022', 'Perancangan & Pemrograman Web', 'CSCE604131');
 INSERT INTO MATA_KULIAH (kode, nama, prasyarat_dari) VALUES ('CSCE604132', 'Komputasi Lunak', NULL);
