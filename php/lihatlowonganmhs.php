@@ -4,12 +4,6 @@
 	
 	if(!connect())
 		die(pg_last_error());
-
-	session_start();
-	$npm = $_SESSION["npm"];
-    $address = $_SESSION["alamat"];
-    $role = $_SESSION["role"];
-	$email = $_SESSION["email"];
 		
 ?>	
 
