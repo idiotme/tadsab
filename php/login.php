@@ -15,17 +15,16 @@
 	$_SESSION['one_row'] = true;
 
 	require "conn.php";
-
 	$alert = "";
-	if(isset($_POST["email"])){
+	if(isset($_POST["sbmt"])){
 		if(checkUsername($_POST["username"])){
 			if(checkPassword($_POST["username"], $_POST["password"])) {
 				$resp = "login success";	
-				movePage();	
+				movePage();
 			}
 			else {
 				$alert ="password incorrect";
-			}
+	}
 		}
 		else {
 			$alert = "username is not exist";
@@ -39,14 +38,24 @@
 		$result1 = pg_query($conn, $sql1);
 		$result2 = pg_query($conn, $sql2);
 		
-		if (pg_fetch_row($result) > 0) {
+		$id = mt_rand();
+
+		if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
-			$_SESSION['role'] = 'mhs';
+			if($id%2==0) {
+				$_SESSION['id'] = $id+1;
+			}
+			else 
+				$_SESSION['id'] = $id;
 			return true;
 		}
-		else if (pg_fetch_row($result) > 0) {
+		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
-			$_SESSION['role'] = 'dosen';
+			if($id%2==0) {
+				$_SESSION['id'] = $id;
+			}
+			else 
+				$_SESSION['id'] = $id+1;
 			return true;
 		}
 		pg_close($conn);
@@ -59,12 +68,11 @@
 		$sql2 = "SELECT password FROM siasisten.dosen WHERE username='$username' AND password='$password'";
 		$result1 = pg_query($conn, $sql1);
 		$result2 = pg_query($conn, $sql2);
-		
-		if (pg_fetch_row($result) > 0) {
+		if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
 			return true;
 		}
-		else if (pg_fetch_row($result) > 0) {
+		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
 			return true;
 		}
@@ -73,19 +81,15 @@
 	}
 
 	function movePage() {
-		if($_SESSION['role']==='mhs') {
-			$_SESSION["userlogin"] = $_POST['username'];
+		if($_SESSION['id']%2>0) {
+			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index1.php");
+			header("Location: index.php?id=".$_SESSION['id']);
 		}
-		elseif ($_SESSION['role']==='dosen') {
-			$_SESSION["userlogin"] = $_POST['username'];
+		elseif ($_SESSION['id']%2==0) {
+			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index.php");
-		} elseif ($_SESSION['role']==='admin') {
-			$_SESSION["userlogin"] = $_POST['username'];
-			session_start();
-			header("Location: index.php");
+			header("Location: index.php?id=".$_SESSION['id']);
 		}
 	}
   
@@ -136,7 +140,7 @@
 				<br>
 			</div>
 			<div class="form-group">        
-				<button id="submit" type="submit" class="btn btn-default">Login</button>
+				<button id="submit" type="submit" name="sbmt" class="btn btn-default">Login</button>
 			</div>
 		</form>
 	</div>

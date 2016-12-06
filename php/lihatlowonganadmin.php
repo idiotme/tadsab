@@ -5,6 +5,19 @@
 	if(!connect())
 		die(pg_last_error());
 		
+/*    session_start();
+    if(!isset($_SESSION["email"])){
+        header("Location: login.php");
+    }
+
+	if($_SESSION["role"] == 'LA'){
+        header("Location: login.php");
+     }
+	 
+    $nama = $_SESSION["nama"];
+    $address = $_SESSION["alamat"];
+    $role = $_SESSION["role"];
+	$email = $_SESSION["email"];*/
 ?>	
 	
 <!DOCTYPE html>
@@ -26,10 +39,10 @@
 		<nav class="navbar navbar-inverse">
 		  <div class="container-fluid">
 		    <div class="navbar-header">
-		      <a class="navbar-brand" href="#">Sistem Informasi Asistensi</a>
+		      <a class="navbar-brand" href="#">Sistem Informasi</a>
 		    </div>
 		    <ul class="nav navbar-nav">
-		      <li class="active"><a href="#">Daftar Lowongan</a></li>
+		      <li class="active"><a href="#">Daftar Lowongan Asisten</a></li>
 		      <li><a href="#">Profil Asisten</a></li>
 		      <li><a href="#">Log Asistensi</a></li>
 		    </ul>
@@ -47,7 +60,32 @@
 		    <button type="button" class="btn btn-primary">Tambah</button>
 		    <br><br>
 				<div class="table table-responsive">
-					
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Kode</th>
+								<th>Mata Kuliah</th>
+								<th>Dosen Pengajar</th>
+								<th>Status</th>
+								<th>Jumlah Lowongan</th>
+								<th>Jumlah Pelamar</th>
+								<th>Jumlah Pelamar Diterima</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th>UIST601014</th>
+								<th>Matematika Dasar 1</th>
+								<th>Walter Porter</th>
+								<th>Tutup</th>
+								<th>2</th>
+								<th>5</th>
+								<th>2</th>
+								<th><span class="glyphicon glyphicon-edit"><span class="glyphicon glyphicon-remove"></th>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<button class="btn-primary" onclick="prev()">Prev</button>
 				<button class="btn-primary" onclick="next()">Next</button>
@@ -68,7 +106,7 @@
 	function sort(){
 	$.ajax({
 		method: "get",
-		url: 'lowonganadmin.php',
+		url: 'lowongan.php',
 		data: {limit:limit},
 		success: function(data){
 			$(".table-responsive").html(data);
@@ -79,7 +117,7 @@
 	
 	
 	function next(){
-		if((limit-10)%10==0)
+		if(limit < 60)
 			limit += 10;
 		sort();
 	}
