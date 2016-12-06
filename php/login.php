@@ -1,31 +1,30 @@
 <?php
 	session_start();
-	/*if(isset($_SESSION["userlogin"])){
-		if($_SESSION["role"]==='dosen') {
-			header("Location: index.php");
+	if(isset($_SESSION["username"])){
+		if ($_SESSION['id']==0) {
+			header("Location: lihatlowonganadmin.php");
 		}
-		elseif($_SESSION['role']==='mhs') {
-			header("Location: pemesanan.php");
+		elseif($_SESSION['id']%2>0) {
+			header("Location: lihatlowonganmhs.php");
 		}
-		elseif ($_SESSION['role']==='admin') {
-			header("Location: pembelian.php");
+		elseif($_SESSION['id']%2==0) {
+			header("Location: lihatlowongandosen.php");
 		}
-	}*/
+	}
 	$_SESSION['idrow'] = 0;
 	$_SESSION['one_row'] = true;
 
 	require "conn.php";
-
 	$alert = "";
-	if(isset($_POST["email"])){
+	if(isset($_POST["sbmt"])){
 		if(checkUsername($_POST["username"])){
 			if(checkPassword($_POST["username"], $_POST["password"])) {
 				$resp = "login success";	
-				movePage();	
+				movePage();
 			}
 			else {
 				$alert ="password incorrect";
-			}
+	}
 		}
 		else {
 			$alert = "username is not exist";
@@ -39,14 +38,39 @@
 		$result1 = pg_query($conn, $sql1);
 		$result2 = pg_query($conn, $sql2);
 		
-		if (pg_fetch_row($result) > 0) {
+		$id = mt_rand();
+
+<<<<<<< HEAD
+		if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
-			$_SESSION['role'] = 'mhs';
+			if($id%2==0) {
+				$_SESSION['id'] = $id+1;
+			}
+			else 
+				$_SESSION['id'] = $id;
 			return true;
 		}
-		else if (pg_fetch_row($result) > 0) {
+		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
-			$_SESSION['role'] = 'dosen';
+=======
+		if($username==='admin') {
+			pg_close($conn);
+			$_SESSION['id'] = 0;
+			return true;
+		}
+		else if (pg_fetch_row($result1) > 0) {
+			pg_close($conn);
+			$_SESSION['id'] = $id+1;
+			return true;
+		}
+		else if (pg_fetch_row($result2) > 0) {
+			pg_close($conn);
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
+			if($id%2==0) {
+				$_SESSION['id'] = $id;
+			}
+			else 
+				$_SESSION['id'] = $id+1;
 			return true;
 		}
 		pg_close($conn);
@@ -59,12 +83,22 @@
 		$sql2 = "SELECT password FROM siasisten.dosen WHERE username='$username' AND password='$password'";
 		$result1 = pg_query($conn, $sql1);
 		$result2 = pg_query($conn, $sql2);
-		
-		if (pg_fetch_row($result) > 0) {
+<<<<<<< HEAD
+		if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
 			return true;
 		}
-		else if (pg_fetch_row($result) > 0) {
+=======
+		if($username==='admin' && $password==='admin') {
+			pg_close($conn);
+			return true;
+		}
+		else if (pg_fetch_row($result1) > 0) {
+			pg_close($conn);
+			return true;
+		}
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
+		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
 			return true;
 		}
@@ -73,19 +107,32 @@
 	}
 
 	function movePage() {
-		if($_SESSION['role']==='mhs') {
-			$_SESSION["userlogin"] = $_POST['username'];
+<<<<<<< HEAD
+		if($_SESSION['id']%2>0) {
+			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index1.php");
+			header("Location: index.php?id=".$_SESSION['id']);
 		}
-		elseif ($_SESSION['role']==='dosen') {
-			$_SESSION["userlogin"] = $_POST['username'];
+		elseif ($_SESSION['id']%2==0) {
+			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index.php");
-		} elseif ($_SESSION['role']==='admin') {
-			$_SESSION["userlogin"] = $_POST['username'];
+			header("Location: index.php?id=".$_SESSION['id']);
+=======
+		if($_SESSION['id']===0) {
+			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index.php");
+			header("Location: lihatlowonganadmin.php");
+		}
+		else if($_SESSION['id']%2>0) {
+			$_SESSION["username"] = $_POST['username'];
+			session_start();
+			header("Location: lihatlowonganmhs.php");
+		}
+		elseif ($_SESSION['id']%2==0) {
+			$_SESSION["username"] = $_POST['username'];
+			session_start();
+			header("Location: lihatlowongandosen.php");
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
 		}
 	}
   
@@ -106,13 +153,8 @@
 		<div class="navbar-header">
 			<a class="navbar-brand" href="#">Sistem Informasi Asistensi</a>
 		</div>
-		<ul class="nav navbar-nav">
-			<li><a href="#">Daftar Lowongan</a></li>
-			<li><a href="#">Profil Asisten</a></li>
-			<li><a href="#">Log Asistensi</a></li>
-		</ul>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			<li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 		</ul>
 	</div>
 </nav>
@@ -136,7 +178,7 @@
 				<br>
 			</div>
 			<div class="form-group">        
-				<button id="submit" type="submit" class="btn btn-default">Login</button>
+				<button id="submit" type="submit" name="sbmt" class="btn btn-default">Login</button>
 			</div>
 		</form>
 	</div>

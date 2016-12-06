@@ -5,7 +5,7 @@
 		header("Location: login.php");
 	}
 
-	$username = $_SESSION["userlogin"];
+	$username = "louis.carter";//$_SESSION["username"];
 ?>
 
 <!DOCTYPE html>
@@ -35,18 +35,30 @@
 	</div>
 </nav>
 
+<?php 
+	if(isset($_POST['password'])) {
+		$sql1 = "update mahasiswa set password=".$_POST['password'].", email_aktif=".$_POST['email-aktif'].", waktu_kosong=".$_POST['waktu-kosong'].", bank=".$_POST['bank'].", norekening=".$_POST['no-rek'].", url_mukatab=".$_POST['url-mukatab'].", url_foto=".$_POST['url-foto']." where username=".$username;
+		$result1 = pg_query($conn, $sql1);
+	}
+	
+	$sql = "select * from mahasiswa where username='".$username."'";
+	$result = pg_query($conn, $sql);
+	$row = pg_fetch_row($result);
+	print_r($row);;
+
+?>
+
 <div class="container">
-	<h2>Data Profil</h2>
-
-	<button type="button" class="btn btn-primary">Simpan</button>
-	<button type="button" class="btn btn-primary">Batal</button>
-
+	<h2>Data Profils</h2>
 		<div class="table-responsive">
 			<table class="table">
-				<div class="form-group">
+				<div class="form-group" method="post">
+					<button type="submit" class="btn btn-primary">Simpan</button>
+					<button type="button" class="btn btn-primary">Batal</button>
+
 					<tr>
 						<th class="col-xs-3">NPM</th>
-						<td>1537676327</td>
+						<td><?php echo $row[0];?></td>
 						<td class="col-xs-2" />
 					</tr>
 				</div>
@@ -67,7 +79,7 @@
 				<div class="form-group">
 					<tr>
 						<th class="col-xs-3">Password</th>
-						<td><input id="password" type="password" class="form-control" name="password" placeholder="Password" value="PxGHpU57zdbg" required></td>
+						<td><input id="password" type="password" class="form-control" name="password" placeholder="Password" value="$row[3]" required></td>
 						<td class="col-xs-2" />
 					</tr>
 				</div>
@@ -80,9 +92,13 @@
 				</div>
 				<div class="form-group">
 					<tr>
-						<th class="col-xs-3">E-mail Aktif</th>
-						<td><input id="email-aktif" type="email" class="form-control" name="email-aktif" placeholder="E-mail Aktif" value="lcarteri@accuweather.com" required></td>
-						<td class="col-xs-2" />
+						<th class="col-xs-3">E-mail Aktifs</th>
+						<?php 
+							print_r($row);
+							echo '
+						<td><input id="email-aktif" type="email" class="form-control" name="email-aktif" placeholder="E-mail Aktif" value="'.$row[5].'" required></td>
+						<td class="col-xs-2" />';
+						?>
 					</tr>
 				</div>
 				<div class="form-group">
@@ -116,14 +132,17 @@
 				<div class="form-group">
 					<tr>
 						<th class="col-xs-3">Halaman Muka Buku Tabungan (*.jpg)</th>
-						<td><input id="url-mukatab" type="url" class="form-control" name="url-mukatab" placeholder="Halaman Muka Buku Tabungan (*.jpg)" value="http://dummyimage.com/241x154.png/ff4444/ffffff" required></td>
+						<td>
+						<img src="http://dummyimage.com/241x154.png/ff4444/ffffff" alt="butab"> <br>
+						<input id="url-mukatab" type="url" class="form-control" name="url-mukatab" placeholder="Halaman Muka Buku Tabungan (*.jpg)" value="http://dummyimage.com/241x154.png/ff4444/ffffff" required></td>
 						<td class="col-xs-2"><button type="button" class="btn btn-primary">Browse</button></td>
 					</tr>
 				</div>
 				<div class="form-group">
 					<tr>
 						<th class="col-xs-3">Foto (*.jpg)</th>
-						<td><input id="url-foto" type="url" class="form-control" name="url-foto" placeholder="Foto (*.jpg)" value="https://robohash.org/veleumtenetur.png?size=50x50&set=set1" required></td>
+						<td><img src="https://robohash.org/veleumtenetur.png?size=50x50&set=set1" alt="foto"> <br>
+						<input id="url-foto" type="url" class="form-control" name="url-foto" placeholder="Foto (*.jpg)" value="https://robohash.org/veleumtenetur.png?size=50x50&set=set1" required></td>
 						<td class="col-xs-2"><button type="button" class="btn btn-primary">Browse</button></td>
 					</tr>
 				</div>
