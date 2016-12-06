@@ -9,7 +9,7 @@
 		
 	$query = "SELECT K.kode_mk, M.nama AS MataKuliah, D.nama, L.status, L.jumlah_asisten, L.jumlah_pelamar, L.jumlah_diterima
 				FROM siasisten.lowongan L, siasisten.kelas_mk K, siasisten.mata_kuliah M, siasisten.dosen D
-				WHERE L.idkelasmk=K.idkelasmk AND K.kode_mk=M.kode AND L.nipdosenpembuka=D.nip order by M.nama offset " . $min . " limit 10;";
+				WHERE L.idkelasmk=K.idkelasmk AND K.kode_mk=M.kode AND L.nipdosenpembuka=D.nip order by M.nama offset " . $min . " limit 10";
 				
 	if(!$res = pg_query($query))
 		die(pg_last_error());

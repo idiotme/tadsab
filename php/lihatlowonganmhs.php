@@ -4,6 +4,12 @@
 	
 	if(!connect())
 		die(pg_last_error());
+
+	session_start();
+	$npm = $_SESSION["npm"];
+    $address = $_SESSION["alamat"];
+    $role = $_SESSION["role"];
+	$email = $_SESSION["email"];
 		
 ?>	
 
@@ -140,8 +146,7 @@
 	sort();
 	
 	function next(){
-		if((limit-10)%10==0)
-			limit += 10;
+		limit += 10;
 		sort();
 	}
 	
@@ -150,5 +155,12 @@
 			limit -= 10;
 		sort();
 	}
+
+	// function daftar() {
+	// 	"INSERT INTO LAMARAN (npm, idlowongan, id_st_lamaran, ipk, jumlahsks, nip) VALUES (getnpm, getidlowongan, 1, getipk, getjumlahsks, getnip)";
+	// }
+	// function batal() {
+	// 	"DELETE FROM LAMARAN WHERE npm = getnpm AND idlowongan = getidlowongan";
+	// }
 
 </script>
