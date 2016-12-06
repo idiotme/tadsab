@@ -42,41 +42,28 @@ where kelas_mk.idkelasmk = lowongan.idkelasmk AND kelas_mk.kode_mk = mata_kuliah
 						</thead>
 						<tbody>"; 
 	
-	/*echo pg_fetch_array($res, null, PGSQL_BOTH);
-	echo pg_fetch_object($res);
-	echo pg_fetch_result($res);
-*/
-	while($line =pg_fetch_object($res)) {
-
-		$row[]=$line;
-		echo $row[0];
+	
+	while($line =pg_fetch_row($res)) {
 	
 		$result = $result . "<tr>\n";
 		
-		$result = $result . "<td>$line[0]</td>\n";
-		$result = $result . "<td>$line[1]</td>\n";
-		$result = $result . "<td>$line[2]</td>\n";
+		$result = $result . "<td>".$line[0]."</td><td>".$line[1]."</td><td>".$line[2]."</td>\n";
 		
 		if ($line[3]=='f')
 			$col_value = "Tutup";
 		else
 			$col_value = "Buka";
-		$result = $result . "<td>$col_value</td>\n";
 		
-		$result = $result . "<td>$line[4]</td>\n";
-		$result = $result . "<td>$line[5]</td>\n";
-		$result = $result . "<td>$line[6]</td>\n";
-		$result = $result . "<td>$line[7]</td>\n";
-		$result = $result . "<td>";
-	
-			if ($line[7]='melamar' || $line[7]='direkomendasikan') {
-				$result = $result . "<button>Batal</button>";
-			} else if ($line[7]='null') {
-				$result = $result . "<button>Daftar</button>";
-			}
-			
+		$result = $result . "<td>".$col_value."</td><td>".$line[4]."</td><td>".$line[5]."</td><td>".$line[6]."</td><td>".$line[7]."</td>\n";
 		
-		$result = $result . "</td>\n";
+		if ($line[7]=='melamar' || $line[7]=='direkomendasikan') {
+			$result = $result . "<td><button>Batal</button></td>\n";
+		} else if ($line[7]=='diterima' || $line[7]=='ditolak') {
+			$result = $result . "<td></td>\n";
+		} else {
+			$result = $result . "<td><button>Daftar</button></td>\n";
+		}
+		
 		
 		$result = $result . "</tr>\n";
 	}
