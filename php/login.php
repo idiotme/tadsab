@@ -41,6 +41,7 @@
 		$id = mt_rand();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
 			if($id%2==0) {
@@ -52,6 +53,20 @@
 		}
 		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
+=======
+		if($username==='admin') {
+			pg_close($conn);
+			$_SESSION['id'] = 0;
+			return true;
+		}
+		else if (pg_fetch_row($result1) > 0) {
+			pg_close($conn);
+			$_SESSION['id'] = $id+1;
+			return true;
+		}
+		else if (pg_fetch_row($result2) > 0) {
+			pg_close($conn);
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
 =======
 		if($username==='admin') {
 			pg_close($conn);
@@ -84,6 +99,7 @@
 		$result1 = pg_query($conn, $sql1);
 		$result2 = pg_query($conn, $sql2);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
 			return true;
@@ -93,10 +109,19 @@
 			pg_close($conn);
 			return true;
 		}
+=======
+		if($username==='admin' && $password==='admin') {
+			pg_close($conn);
+			return true;
+		}
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
 		else if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
 			return true;
 		}
+<<<<<<< HEAD
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
+=======
 >>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
 		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
@@ -107,6 +132,7 @@
 	}
 
 	function movePage() {
+<<<<<<< HEAD
 <<<<<<< HEAD
 		if($_SESSION['id']%2>0) {
 			$_SESSION["username"] = $_POST['username'];
@@ -121,6 +147,11 @@
 		if($_SESSION['id']===0) {
 			$_SESSION["username"] = $_POST['username'];
 			session_start();
+=======
+		if($_SESSION['id']===0) {
+			$_SESSION["username"] = $_POST['username'];
+			session_start();
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
 			header("Location: lihatlowonganadmin.php");
 		}
 		else if($_SESSION['id']%2>0) {
@@ -132,6 +163,9 @@
 			$_SESSION["username"] = $_POST['username'];
 			session_start();
 			header("Location: lihatlowongandosen.php");
+<<<<<<< HEAD
+>>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
+=======
 >>>>>>> 6e4adb03b39b5e4b37cf330fb9f6886b2359ed86
 		}
 	}
