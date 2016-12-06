@@ -1,14 +1,14 @@
 <?php
 	session_start();
 	/*if(isset($_SESSION["userlogin"])){
-		if($_SESSION["role"]==='dosen') {
-			header("Location: index.php");
+		if ($_SESSION['id']==0) {
+			header("Location: lihatlowonganadmin.php");
 		}
-		elseif($_SESSION['role']==='mhs') {
-			header("Location: pemesanan.php");
+		elseif($_SESSION['id']%2>0) {
+			header("Location: lihatlowonganmhs.php");
 		}
-		elseif ($_SESSION['role']==='admin') {
-			header("Location: pembelian.php");
+		elseif($_SESSION['id']%2==0) {
+			header("Location: lihatlowongandosen.php");
 		}
 	}*/
 	$_SESSION['idrow'] = 0;
@@ -40,14 +40,13 @@
 		
 		$id = mt_rand();
 
-		if (pg_fetch_row($result1) > 0) {
+		if($username==='admin') {
 			pg_close($conn);
-			if($id%2==0) {
-				$_SESSION['id'] = $id+1;
-			}
-			else 
-				$_SESSION['id'] = $id;
-			return true;
+			$_SESSION['id'] = 0;
+		}
+		else if (pg_fetch_row($result1) > 0) {
+			pg_close($conn);
+			$_SESSION['id'] = $id+1;
 		}
 		else if (pg_fetch_row($result2) > 0) {
 			pg_close($conn);
@@ -68,7 +67,10 @@
 		$sql2 = "SELECT password FROM siasisten.dosen WHERE username='$username' AND password='$password'";
 		$result1 = pg_query($conn, $sql1);
 		$result2 = pg_query($conn, $sql2);
-		if (pg_fetch_row($result1) > 0) {
+		if($username==='admin' && $password==='admin') {
+			pg_close($conn);
+		}
+		else if (pg_fetch_row($result1) > 0) {
 			pg_close($conn);
 			return true;
 		}
@@ -81,15 +83,20 @@
 	}
 
 	function movePage() {
-		if($_SESSION['id']%2>0) {
+		if($_SESSION['id']==0) {
 			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index.php?id=".$_SESSION['id']);
+			header("Location: lihatlowonganadmin.php");
+		}
+		else if($_SESSION['id']%2>0) {
+			$_SESSION["username"] = $_POST['username'];
+			session_start();
+			header("Location: lihatlowonganmhs.php");
 		}
 		elseif ($_SESSION['id']%2==0) {
 			$_SESSION["username"] = $_POST['username'];
 			session_start();
-			header("Location: index.php?id=".$_SESSION['id']);
+			header("Location: lihatlowongandosen.php");
 		}
 	}
   
