@@ -7,11 +7,19 @@
 	$limit= $_GET['limit'];
 	$min = $limit - 10;
 		
-	$query = "SELECT K.kode_mk, M.nama AS MataKuliah, D.nama, L.status, L.jumlah_asisten, L.jumlah_pelamar, L.jumlah_diterima, S.status
-				FROM siasisten.lowongan L, siasisten.kelas_mk K, siasisten.mata_kuliah M, siasisten.dosen D, siasisten.status_lamaran S, siasisten.lamaran La
-				WHERE L.idkelasmk=K.idkelasmk AND K.kode_mk=M.kode AND L.nipdosenpembuka=D.nip AND L.idlowongan=La.idlowongan AND La.id_st_lamaran=S.id
-				order by M.nama offset " . $min . " limit 10;";
-				
+	$query = "(Select kelas_mk.kode_mk, mata_kuliah.nama, dosen.nama, lowongan.status, jumlah_asisten, jumlah_pelamar, jumlah_diterima, status_lamaran.status as status2 
+from siasisten.lowongan, siasisten.kelas_mk, siasisten.mata_kuliah, siasisten.dosen, siasisten.dosen_kelas_mk, siasisten.status_lamaran, siasisten.lamaran
+where kelas_mk.idkelasmk = lowongan.idkelasmk AND kelas_mk.kode_mk = mata_kuliah.kode AND dosen_kelas_mk.nip = dosen.nip AND dosen_kelas_mk.idkelasmk = lowongan.idkelasmk AND lowongan.nipdosenpembuka = dosen.nip AND lamaran.npm='1310336628' AND lamaran.id_st_lamaran=status_lamaran.id AND lowongan.idlowongan=lamaran.idlowongan order by kelas_mk.kode_mk)
+UNION (
+(Select kelas_mk.kode_mk,mata_kuliah.nama,dosen.nama, status, jumlah_asisten, jumlah_pelamar, jumlah_diterima, null as status2
+from siasisten.lowongan, siasisten.kelas_mk, siasisten.mata_kuliah, siasisten.dosen, siasisten.dosen_kelas_mk
+where kelas_mk.idkelasmk = lowongan.idkelasmk AND kelas_mk.kode_mk = mata_kuliah.kode AND dosen_kelas_mk.nip = dosen.nip AND dosen_kelas_mk.idkelasmk = lowongan.idkelasmk AND lowongan.nipdosenpembuka = dosen.nip order by kelas_mk.kode_mk)
+Except
+(Select kelas_mk.kode_mk,mata_kuliah.nama,dosen.nama, lowongan.status, jumlah_asisten, jumlah_pelamar, jumlah_diterima, null as status2
+from siasisten.lowongan, siasisten.kelas_mk, siasisten.mata_kuliah, siasisten.dosen, siasisten.dosen_kelas_mk, siasisten.status_lamaran, siasisten.lamaran
+where kelas_mk.idkelasmk = lowongan.idkelasmk AND kelas_mk.kode_mk = mata_kuliah.kode AND dosen_kelas_mk.nip = dosen.nip AND dosen_kelas_mk.idkelasmk = lowongan.idkelasmk AND lowongan.nipdosenpembuka = dosen.nip AND lamaran.npm='1310336628' AND lamaran.id_st_lamaran=status_lamaran.id AND lowongan.idlowongan=lamaran.idlowongan order by kelas_mk.kode_mk)) order by status2
+ 			offset " . $min . " limit 10";
+
 	if(!$res = pg_query($query))
 		die(pg_last_error());
 		
@@ -34,7 +42,14 @@
 						</thead>
 						<tbody>"; 
 	
-	while($line =pg_fetch_row($res)) {
+	/*echo pg_fetch_array($res, null, PGSQL_BOTH);
+	echo pg_fetch_object($res);
+	echo pg_fetch_result($res);
+*/
+	while($line =pg_fetch_object($res)) {
+
+		$row[]=$line;
+		echo $row[0];
 	
 		$result = $result . "<tr>\n";
 		
@@ -52,7 +67,16 @@
 		$result = $result . "<td>$line[5]</td>\n";
 		$result = $result . "<td>$line[6]</td>\n";
 		$result = $result . "<td>$line[7]</td>\n";
-		$result = $result . "<td><button>Edit</button><button>Delete</button></td>\n";
+		$result = $result . "<td>";
+	
+			if ($line[7]='melamar' || $line[7]='direkomendasikan') {
+				$result = $result . "<button>Batal</button>";
+			} else if ($line[7]='null') {
+				$result = $result . "<button>Daftar</button>";
+			}
+			
+		
+		$result = $result . "</td>\n";
 		
 		$result = $result . "</tr>\n";
 	}

@@ -139,7 +139,6 @@
 	}
 	sort();
 	
-	
 	function next(){
 		if((limit-10)%10==0)
 			limit += 10;
