@@ -25,12 +25,12 @@
 		      <a class="navbar-brand" href="#">Sistem Informasi Asistensi</a>
 		    </div>
 		    <ul class="nav navbar-nav">
-		      <li><a href="#">Daftar Lowongan</a></li>
-		      <li><a href="#">Profil Asisten</a></li>
+		      <li class="active"><a href="lihatlowonganmhs.php">Daftar Lowongan</a></li>
+		      <li><a href="ubah-profil.php">Profil Asisten</a></li>
 		      <li><a href="#">Log Asistensi</a></li>
 		    </ul>
 		    <ul class="nav navbar-nav navbar-right">
-		      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+		      <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
 		    </ul>
 		  </div>
 		</nav>
